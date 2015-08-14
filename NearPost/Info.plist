@@ -27,7 +27,7 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>NeoPost Needs To Use Location Always</string>
+	<string>NeoPost Requires this inorder to receive near by Posts</string>
 	<key>NSMainNibFile</key>
 	<string>LaunchView</string>
 	<key>UIBackgroundModes</key>

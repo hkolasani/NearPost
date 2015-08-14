@@ -15,7 +15,6 @@
 		1B2408621B66F8C800E913F8 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B2408521B66F8C800E913F8 /* Post.swift */; };
 		1B2408631B66F8C800E913F8 /* SFDCDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B2408531B66F8C800E913F8 /* SFDCDataManager.swift */; };
 		1B2408641B66F8C800E913F8 /* SFDCSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B2408541B66F8C800E913F8 /* SFDCSettings.swift */; };
-		1B24086B1B670DCE00E913F8 /* BeaconManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B24086A1B670DCE00E913F8 /* BeaconManager.swift */; };
 		1B2408701B69B83600E913F8 /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B24086F1B69B83600E913F8 /* FeedViewController.swift */; };
 		1B2FE2DB1B1FCF38008F7E2D /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B2FE2DA1B1FCF38008F7E2D /* CoreBluetooth.framework */; };
 		1B779F3F1B16A91A00911AC9 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B779F3E1B16A91A00911AC9 /* libxml2.dylib */; };
@@ -33,6 +32,8 @@
 		1B779F571B16A9B200911AC9 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B779F561B16A9B200911AC9 /* SystemConfiguration.framework */; };
 		1B779F5A1B16AA0100911AC9 /* SalesforceSDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 1B779F581B16AA0100911AC9 /* SalesforceSDKResources.bundle */; };
 		1B779F5B1B16AA0100911AC9 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 1B779F591B16AA0100911AC9 /* Settings.bundle */; };
+		1B999CF81B7D19B20088F236 /* person.png in Resources */ = {isa = PBXBuildFile; fileRef = 1B999CF71B7D19B20088F236 /* person.png */; };
+		1B999CFA1B7D1EC20088F236 /* FeedViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B999CF91B7D1EC20088F236 /* FeedViewCell.swift */; };
 		1B9F14F31B44C3930078B73E /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B9F14E91B44C3930078B73E /* FMDatabase.m */; };
 		1B9F14F41B44C3930078B73E /* FMDatabaseAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B9F14EB1B44C3930078B73E /* FMDatabaseAdditions.m */; };
 		1B9F14F51B44C3930078B73E /* FMDatabasePool.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B9F14ED1B44C3930078B73E /* FMDatabasePool.m */; };
@@ -53,6 +54,8 @@
 		1BD3ACF41B1138F100AFCB16 /* libSalesforceCommonUtils.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BD3ACDE1B1138F100AFCB16 /* libSalesforceCommonUtils.a */; };
 		1BD3ACF51B1138F100AFCB16 /* libsqlcipher.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BD3ACE01B1138F100AFCB16 /* libsqlcipher.a */; };
 		1BD3ACF61B1138F100AFCB16 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 1BD3ACE11B1138F100AFCB16 /* LICENSE */; };
+		1BE919D31B7D63B300F309C4 /* HP.png in Resources */ = {isa = PBXBuildFile; fileRef = 1BE919D21B7D63B300F309C4 /* HP.png */; };
+		1BE919D51B7D8A4900F309C4 /* thumby.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1BE919D41B7D8A4900F309C4 /* thumby.jpg */; };
 		1BF7B37D1B6D982700AC4C9A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1BF7B37C1B6D982700AC4C9A /* Main.storyboard */; };
 		1BF7B37F1B6D989800AC4C9A /* LaunchView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1BF7B37E1B6D989800AC4C9A /* LaunchView.xib */; };
 		1BF7B3811B6D994000AC4C9A /* InitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BF7B3801B6D994000AC4C9A /* InitViewController.swift */; };
@@ -73,7 +76,6 @@
 		1B2408521B66F8C800E913F8 /* Post.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
 		1B2408531B66F8C800E913F8 /* SFDCDataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SFDCDataManager.swift; sourceTree = "<group>"; };
 		1B2408541B66F8C800E913F8 /* SFDCSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SFDCSettings.swift; sourceTree = "<group>"; };
-		1B24086A1B670DCE00E913F8 /* BeaconManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BeaconManager.swift; sourceTree = "<group>"; };
 		1B24086F1B69B83600E913F8 /* FeedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
 		1B2FE2DA1B1FCF38008F7E2D /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
 		1B779F3E1B16A91A00911AC9 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
@@ -91,6 +93,8 @@
 		1B779F561B16A9B200911AC9 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		1B779F581B16AA0100911AC9 /* SalesforceSDKResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = SalesforceSDKResources.bundle; path = "../../SDK/SalesforceMobileSDK-iOS-Distribution-master/SalesforceSDKResources.bundle"; sourceTree = "<group>"; };
 		1B779F591B16AA0100911AC9 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = Settings.bundle; path = "../../SDK/SalesforceMobileSDK-iOS-Distribution-master/Settings.bundle"; sourceTree = "<group>"; };
+		1B999CF71B7D19B20088F236 /* person.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = person.png; sourceTree = "<group>"; };
+		1B999CF91B7D1EC20088F236 /* FeedViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedViewCell.swift; sourceTree = "<group>"; };
 		1B9F14E81B44C3930078B73E /* FMDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabase.h; sourceTree = "<group>"; };
 		1B9F14E91B44C3930078B73E /* FMDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabase.m; sourceTree = "<group>"; };
 		1B9F14EA1B44C3930078B73E /* FMDatabaseAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabaseAdditions.h; sourceTree = "<group>"; };
@@ -330,6 +334,8 @@
 		1BD3ACDE1B1138F100AFCB16 /* libSalesforceCommonUtils.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libSalesforceCommonUtils.a; sourceTree = "<group>"; };
 		1BD3ACE01B1138F100AFCB16 /* libsqlcipher.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libsqlcipher.a; sourceTree = "<group>"; };
 		1BD3ACE11B1138F100AFCB16 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		1BE919D21B7D63B300F309C4 /* HP.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = HP.png; sourceTree = "<group>"; };
+		1BE919D41B7D8A4900F309C4 /* thumby.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = thumby.jpg; sourceTree = "<group>"; };
 		1BF7B37C1B6D982700AC4C9A /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		1BF7B37E1B6D989800AC4C9A /* LaunchView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LaunchView.xib; sourceTree = "<group>"; };
 		1BF7B3801B6D994000AC4C9A /* InitViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InitViewController.swift; sourceTree = "<group>"; };
@@ -398,7 +404,6 @@
 				1B2408661B66F95F00E913F8 /* Model */,
 				1B2408671B66F96700E913F8 /* App */,
 				1B24086D1B69B80200E913F8 /* View Controllers */,
-				1B2408691B670DBC00E913F8 /* iBeacon */,
 				1B2408681B66F99600E913F8 /* SFDC */,
 				1B24084B1B66F8C800E913F8 /* NearPost-Bridging-Header.h */,
 				1B24084C1B66F8C800E913F8 /* Images.xcassets */,
@@ -435,20 +440,13 @@
 			name = SFDC;
 			sourceTree = "<group>";
 		};
-		1B2408691B670DBC00E913F8 /* iBeacon */ = {
-			isa = PBXGroup;
-			children = (
-				1B24086A1B670DCE00E913F8 /* BeaconManager.swift */,
-			);
-			name = iBeacon;
-			sourceTree = "<group>";
-		};
 		1B24086D1B69B80200E913F8 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
 				1B24086F1B69B83600E913F8 /* FeedViewController.swift */,
 				1BF7B3801B6D994000AC4C9A /* InitViewController.swift */,
 				1BF7B3821B6D995400AC4C9A /* InitViewController.xib */,
+				1B999CF91B7D1EC20088F236 /* FeedViewCell.swift */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -478,10 +476,21 @@
 		1B779F5D1B16AACC00911AC9 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				1B999CF61B7D18FB0088F236 /* Images */,
 				1B779F581B16AA0100911AC9 /* SalesforceSDKResources.bundle */,
 				1B779F591B16AA0100911AC9 /* Settings.bundle */,
 			);
 			name = Resources;
+			sourceTree = "<group>";
+		};
+		1B999CF61B7D18FB0088F236 /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				1BE919D41B7D8A4900F309C4 /* thumby.jpg */,
+				1BE919D21B7D63B300F309C4 /* HP.png */,
+				1B999CF71B7D19B20088F236 /* person.png */,
+			);
+			name = Images;
 			sourceTree = "<group>";
 		};
 		1B9F14E71B44C3930078B73E /* fmdb */ = {
@@ -1053,7 +1062,10 @@
 				1B779F5B1B16AA0100911AC9 /* Settings.bundle in Resources */,
 				1B2408611B66F8C800E913F8 /* NearPost.entitlements in Resources */,
 				1BF7B37D1B6D982700AC4C9A /* Main.storyboard in Resources */,
+				1BE919D31B7D63B300F309C4 /* HP.png in Resources */,
+				1BE919D51B7D8A4900F309C4 /* thumby.jpg in Resources */,
 				1BD3ACF31B1138F100AFCB16 /* commit.txt in Resources */,
+				1B999CF81B7D19B20088F236 /* person.png in Resources */,
 				1BF7B3831B6D995400AC4C9A /* InitViewController.xib in Resources */,
 				1B779F5A1B16AA0100911AC9 /* SalesforceSDKResources.bundle in Resources */,
 				1BD3ACF61B1138F100AFCB16 /* LICENSE in Resources */,
@@ -1072,7 +1084,6 @@
 				1B9F14F31B44C3930078B73E /* FMDatabase.m in Sources */,
 				1B2408621B66F8C800E913F8 /* Post.swift in Sources */,
 				1B9F14F61B44C3930078B73E /* FMDatabaseQueue.m in Sources */,
-				1B24086B1B670DCE00E913F8 /* BeaconManager.swift in Sources */,
 				1BF7B3811B6D994000AC4C9A /* InitViewController.swift in Sources */,
 				1B9F14F71B44C3930078B73E /* FMResultSet.m in Sources */,
 				1B2408631B66F8C800E913F8 /* SFDCDataManager.swift in Sources */,
@@ -1081,6 +1092,7 @@
 				1B9F14F41B44C3930078B73E /* FMDatabaseAdditions.m in Sources */,
 				1B9F14F51B44C3930078B73E /* FMDatabasePool.m in Sources */,
 				1B23B68B1B1FD55800889130 /* MBProgressHUD.m in Sources */,
+				1B999CFA1B7D1EC20088F236 /* FeedViewCell.swift in Sources */,
 				1B2408641B66F8C800E913F8 /* SFDCSettings.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

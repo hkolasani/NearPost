@@ -18,6 +18,7 @@ class Post: NSObject {
     var postText:String?
     var createdBy:String?
     var thumbURL:String?
+    var thumbnail:NSData?
 
 }
 

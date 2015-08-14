@@ -48,6 +48,13 @@ class SFDCDataManager {
         
         return SFDCDataManager.sendSyncRequest(thumbURL, accessToken:accessToken)
     }
+    
+    class func getImage(url:String)->NSData? {
+        
+        let accessToken = getAccessToken()
+        
+        return SFDCDataManager.sendSyncRequest(url, accessToken:accessToken)
+    }
    
     class func getUserPicture()-> NSData? {
         

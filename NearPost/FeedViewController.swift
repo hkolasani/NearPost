@@ -27,12 +27,13 @@ class FeedViewController: UITableViewController {
         
         super.viewDidLoad()
         
-        self.tableView?.rowHeight = 90
-        
         self.navigationItem.title = "NearPost"
         
         self.navigationItem.setRightBarButtonItem(UIBarButtonItem(barButtonSystemItem: .Compose, target: self, action: "testPost"), animated: true)
         //self.navigationItem.setLeftBarButtonItem(UIBarButtonItem(barButtonSystemItem: .Refresh, target: self, action: "refresh"), animated: true)
+        
+        self.tableView.rowHeight  = UITableViewAutomaticDimension
+        self.tableView.estimatedRowHeight = 200
         
          self.setNavStyle()
     }
@@ -47,7 +48,8 @@ class FeedViewController: UITableViewController {
         let titleDict: NSDictionary = [NSForegroundColorAttributeName: UIColor.whiteColor()]
         self.navigationController?.navigationBar.titleTextAttributes = titleDict as [NSObject : AnyObject]
         
-        let attrDict = [NSForegroundColorAttributeName: UIColor.whiteColor(),NSFontAttributeName:UIFont(name: "HelveticaNeue-Bold", size: 25)!]
+        let attrDict = [NSForegroundColorAttributeName: UIColor.whiteColor(),NSFontAttributeName:UIFont(name: "Avenir-Medium", size: 20)!]
+
         self.navigationController?.navigationBar.titleTextAttributes = attrDict
         
         self.navigationItem.rightBarButtonItem?.tintColor = UIColor.whiteColor()
@@ -59,7 +61,6 @@ class FeedViewController: UITableViewController {
         
         UINavigationBar.appearance().tintColor = UIColor.whiteColor()
     }
-
     
     override func viewDidAppear(animated: Bool) {
         
@@ -67,12 +68,13 @@ class FeedViewController: UITableViewController {
         
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         
-        appDelegate.beaconManager?.startRanging()
+        appDelegate.loginToSFDC()
 
-        self.refresh()
-       
+    }
+    
+    func startTimer() {
+        
         self.timer = NSTimer.scheduledTimerWithTimeInterval(5   , target: self, selector: Selector("refresh"), userInfo: nil, repeats: true);
-       
     }
 
     override func viewWillDisappear(animated: Bool) {
@@ -81,7 +83,9 @@ class FeedViewController: UITableViewController {
         
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         
-        appDelegate.beaconManager?.stopAdvertizing()
+        appDelegate.stopAdvertizing()
+        
+        self.stopTimer()
     }
     
     func refresh() {
@@ -96,9 +100,9 @@ class FeedViewController: UITableViewController {
         
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         
-        dispatch_async(appDelegate.beaconManager!.rangedBeaconsAccessQueue!) {
+        dispatch_async(appDelegate.rangedBeaconsAccessQueue!) {
             
-            var rangedBeaconsSet:Set<String> = Set(appDelegate.beaconManager!.getRangedBeacons())
+            var rangedBeaconsSet:Set<String> = Set(appDelegate.getRangedBeacons())
             
             if (rangedBeaconsSet.count > 0  || self.unfetchedBeaconsSet.count > 0) {
                 dispatch_async(dispatch_get_main_queue(), {
@@ -128,20 +132,33 @@ class FeedViewController: UITableViewController {
         var tobeFetachedBeacons:[String] = Array(tobeFetchedBeaconsSet)
         
         var newPosts:[Post] = SFDCDataManager.fetchPosts(tobeFetachedBeacons)
+        var newPostsWithImages:[Post] = [Post]()
+        
         
         var fetchedBeaconsSet:Set<String> = Set<String>()
         
         for var i = 0; i < newPosts.count; i++ {
+            
             var newPost:Post = newPosts[i]
+            
+            if let thumbURL = newPost.thumbURL {
+                if let imageData = SFDCDataManager.getImage(thumbURL) {
+                    newPost.thumbnail = imageData
+                }
+            }
+            
             fetchedBeaconsSet.insert(newPost.beaconId!)
+            
             self.allFetchedBeaconsSet.insert(newPost.beaconId!)
+            
+            newPostsWithImages.append(newPost)
         }
         
         //Gather any unfetched beacons: This scenario exists as SOSL sometimes may not fetch the post right away.SOSL is indexed asynchronously
         //You can't rely on the results being available in real-time, or even within a few seconds after the final commit.
         self.unfetchedBeaconsSet = Set(tobeFetchedBeaconsSet.subtract(fetchedBeaconsSet))
         
-        self.insertRowsForNewPosts(newPosts)
+        self.insertRowsForNewPosts(newPostsWithImages)
         
         //var newPosts:[Post] = SFDCDataManager.testFetchPosts(self.newlyRangedBeacons)
     }
@@ -150,7 +167,7 @@ class FeedViewController: UITableViewController {
         
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         
-        var postText:String = "Post - \(appDelegate.beaconManager!.randomInt(0,max: 100000))"
+        var postText:String = "The phenomenon known as El Niño is brewing in the Pacific Ocean - and it could be one of the strongest on "
         
         let result = self.post(postText)
         
@@ -161,7 +178,7 @@ class FeedViewController: UITableViewController {
         
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         
-        return appDelegate.beaconManager?.post(postText)
+        return appDelegate.post(postText)
     }
     
     override func didReceiveMemoryWarning() {
@@ -209,44 +226,31 @@ class FeedViewController: UITableViewController {
     
     override func tableView(tableView: UITableView,cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-        var cell:UITableViewCell? = tableView.dequeueReusableCellWithIdentifier("FeedCell") as? UITableViewCell
+        var cell:FeedViewCell? = tableView.dequeueReusableCellWithIdentifier("FeedCell") as? FeedViewCell
         
         if(cell == nil) {
-            cell = UITableViewCell(style: UITableViewCellStyle.Subtitle, reuseIdentifier: "FeedCell")
-            cell!.selectionStyle = UITableViewCellSelectionStyle.None
+            cell = FeedViewCell(style: UITableViewCellStyle.Subtitle, reuseIdentifier: "FeedCell")
         }
+
+        cell!.selectionStyle = UITableViewCellSelectionStyle.None
         
         var post:Post = posts[indexPath.row]
         
-        cell!.textLabel?.text = post.postBody
-        
-        if let image = UIImage(named:"RoundIcons/shopping-13.png") {
-            UIGraphicsBeginImageContext(CGSize(width: 30, height: 30));
-            image.drawInRect(CGRectMake(0, 0, 30, 30));
-            let theImage = UIGraphicsGetImageFromCurrentImageContext();
-            UIGraphicsEndImageContext();
-            cell?.imageView?.image = theImage
-        }
-        else {
-            cell?.imageView?.image = nil
-        }
-        
-        cell!.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
-        
-        cell?.textLabel?.textColor = UIColor(red: 65/255, green: 90/255, blue: 89/255, alpha: 1.0)
-        cell?.detailTextLabel?.textColor = UIColor.lightGrayColor()
-        cell?.textLabel?.font = UIFont (name: "HelveticaNeue-Light", size: 16)
-        cell?.detailTextLabel?.font = UIFont (name: "HelveticaNeue-Light", size: 14)
+        cell?.populateCell(post)
         
         return cell!
     }
-    
+
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
         //self.selectedBeacon = self.beacons[indexPath.row]
         
         //self.performSegueWithIdentifier("ShowPosts", sender: nil)
         
+    }
+    
+    func stopTimer() {
+        self.timer?.invalidate()
     }
     
     func delay(delay:Double, closure:()->()) {
