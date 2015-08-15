@@ -10,14 +10,14 @@
             <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Near Post" textAlignment="center" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" minimumFontSize="18" translatesAutoresizingMaskIntoConstraints="NO" id="QLO-bG-T8f">
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Near Post" textAlignment="center" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" minimumFontSize="18" translatesAutoresizingMaskIntoConstraints="NO" id="QLO-bG-T8f">
                     <rect key="frame" x="85" y="278" width="441" height="43"/>
                     <animations/>
                     <fontDescription key="fontDescription" type="boldSystem" pointSize="36"/>
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="  Copyright (c) 2015 BlueCloud Systems. All rights reserved." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="Ob6-gI-lkz">
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="  Copyright (c) 2015 BlueCloud Systems. All rights reserved." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="Ob6-gI-lkz">
                     <rect key="frame" x="85" y="566" width="441" height="21"/>
                     <animations/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -27,6 +27,14 @@
             </subviews>
             <animations/>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="Ob6-gI-lkz" secondAttribute="bottom" constant="13" id="GBw-j9-UI1"/>
+                <constraint firstAttribute="trailing" secondItem="Ob6-gI-lkz" secondAttribute="trailing" constant="74" id="MmR-HN-EmD"/>
+                <constraint firstItem="Ob6-gI-lkz" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="85" id="dsh-Ig-ELT"/>
+                <constraint firstAttribute="trailing" secondItem="QLO-bG-T8f" secondAttribute="trailing" constant="74" id="lE0-kY-PgH"/>
+                <constraint firstItem="QLO-bG-T8f" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="278" id="nvW-82-yiK"/>
+                <constraint firstItem="QLO-bG-T8f" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="85" id="sNS-cP-ED7"/>
+            </constraints>
         </view>
     </objects>
 </document>

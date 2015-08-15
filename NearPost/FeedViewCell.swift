@@ -30,7 +30,9 @@ class FeedViewCell : UITableViewCell {
         }
    
         username!.text = post.createdBy
+        
         let str =  self.timeAgoSinceDate(post.dateCreated!,numericDates:false)
+        
         when!.text = str
         postText!.text = post.postText
         
@@ -41,9 +43,12 @@ class FeedViewCell : UITableViewCell {
     }
     
     func timeAgoSinceDate(date:NSDate, numericDates:Bool) -> String {
+        
         let calendar = NSCalendar.currentCalendar()
+        
         let unitFlags = NSCalendarUnit.CalendarUnitMinute | NSCalendarUnit.CalendarUnitHour | NSCalendarUnit.CalendarUnitDay | NSCalendarUnit.CalendarUnitWeekOfYear | NSCalendarUnit.CalendarUnitMonth | NSCalendarUnit.CalendarUnitYear | NSCalendarUnit.CalendarUnitSecond
         let now = NSDate()
+
         let earliest = now.earlierDate(date)
         let latest = (earliest == now) ? date : now
         let components:NSDateComponents = calendar.components(unitFlags, fromDate: earliest, toDate: latest, options: nil)

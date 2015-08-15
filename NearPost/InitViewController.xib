@@ -14,7 +14,7 @@
             <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Logging into Salesforce Success Community..." borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="L40-M0-hTX">
+                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Logging into Salesforce Success Community..." borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="L40-M0-hTX">
                     <rect key="frame" x="119" y="285" width="400" height="30"/>
                     <animations/>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -23,6 +23,11 @@
             </subviews>
             <animations/>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="L40-M0-hTX" secondAttribute="trailing" constant="81" id="CJ4-hg-Em3"/>
+                <constraint firstItem="L40-M0-hTX" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="285" id="Rfb-Rp-BOL"/>
+                <constraint firstItem="L40-M0-hTX" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="119" id="vx7-Vn-fy2"/>
+            </constraints>
         </view>
     </objects>
 </document>

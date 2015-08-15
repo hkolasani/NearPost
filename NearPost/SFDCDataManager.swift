@@ -254,7 +254,7 @@ class SFDCDataManager {
             if(count(dateStr) > 19) {
                 let dateFormatter = NSDateFormatter()
                 dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
-                dateFormatter.timeZone = NSTimeZone.localTimeZone()
+                dateFormatter.timeZone = NSTimeZone(name:"GMT")
                 let index: String.Index = advance(dateStr.startIndex, 19)
                 let dateSubStr = dateStr.substringToIndex(index)
                 post.dateCreated = dateFormatter.dateFromString(dateSubStr)
@@ -283,5 +283,4 @@ class SFDCDataManager {
         
         return post
     }
-    
 }

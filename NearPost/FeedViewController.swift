@@ -27,9 +27,9 @@ class FeedViewController: UITableViewController {
         
         super.viewDidLoad()
         
-        self.navigationItem.title = "NearPost"
+        self.navigationItem.title = "Near Posts"
         
-        self.navigationItem.setRightBarButtonItem(UIBarButtonItem(barButtonSystemItem: .Compose, target: self, action: "testPost"), animated: true)
+        self.navigationItem.setRightBarButtonItem(UIBarButtonItem(barButtonSystemItem: .Compose, target: self, action: "newPost"), animated: true)
         //self.navigationItem.setLeftBarButtonItem(UIBarButtonItem(barButtonSystemItem: .Refresh, target: self, action: "refresh"), animated: true)
         
         self.tableView.rowHeight  = UITableViewAutomaticDimension
@@ -64,11 +64,15 @@ class FeedViewController: UITableViewController {
     
     override func viewDidAppear(animated: Bool) {
         
+        if !self.hasConnectivity() {
+            self.showAlert("Warning!", message: "NearPost requires Internet Connection to function!")
+        }
+        
         super.viewDidAppear(animated)
         
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        self.refresh()
         
-        appDelegate.loginToSFDC()
+        self.startTimer()
 
     }
     
@@ -163,22 +167,9 @@ class FeedViewController: UITableViewController {
         //var newPosts:[Post] = SFDCDataManager.testFetchPosts(self.newlyRangedBeacons)
     }
     
-    func testPost() {
+    func newPost() {
         
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        
-        var postText:String = "The phenomenon known as El Niño is brewing in the Pacific Ocean - and it could be one of the strongest on "
-        
-        let result = self.post(postText)
-        
-        self.showAlert("Advertized Successfully", message: "\(result?.beaconId)")
-    }
-    
-    func post(postText:String) -> (success:Bool,beaconId:String)? {
-        
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        
-        return appDelegate.post(postText)
+        self.performSegueWithIdentifier("newPost", sender: nil)
     }
     
     override func didReceiveMemoryWarning() {
@@ -261,6 +252,13 @@ class FeedViewController: UITableViewController {
             ),
             dispatch_get_main_queue(), closure)
     }
+    
+    func hasConnectivity() -> Bool {
+        let reachability: Reachability = Reachability.reachabilityForInternetConnection()
+        let networkStatus: Int = reachability.currentReachabilityStatus().value
+        return networkStatus != 0
+    }
+
 }
 
 

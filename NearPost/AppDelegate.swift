@@ -44,7 +44,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate,SFAuthenticationManagerDel
         
         //TODO: Intiialize App Settings.
         
-        self .initializeAppViewState()
+        self.initializeAppViewState()
+        
+        if !self.hasConnectivity() {
+            self.showAlert("Warning!", message: "NearPost requires Internet Connection to function!")
+        }
         
         let date = NSDate()
         let calendar = NSCalendar.currentCalendar()
@@ -74,9 +78,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate,SFAuthenticationManagerDel
         
         self.initBeacon()
         
-        self.startMonitoringForRegion()
+        self.startLookingForbeacons()
         
-        self.setupRootViewController()
+        self.loginToSFDC()
         
         return true
     }
@@ -99,12 +103,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate,SFAuthenticationManagerDel
             let userInfoDict = SFDCDataManager.getUserInfo()
             let photosDict:NSDictionary = userInfoDict.objectForKey("photos") as! NSDictionary
             self.userThumbURL  = photosDict.objectForKey("thumbnail") as! String
+
+                println(SFDCDataManager.getAccessToken())
             
-            println(SFDCDataManager.getAccessToken())
-            
-            self.feedViewController?.refresh()
-            
-            self.feedViewController?.startTimer()
+                self.setupRootViewController()
             
             }, failure: { oAuthInfo,error in
                 SFAuthenticationManager.sharedManager().logout()
@@ -154,7 +156,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate,SFAuthenticationManagerDel
         self.locationManager!.stopMonitoringForRegion(beaconRegion)
     }
     
-    func startMonitoringForRegion() {
+    func startLookingForbeacons() {
         
         self.beaconRegion = CLBeaconRegion(proximityUUID: self.BEACON_UUID,identifier: self.BEACON_IDENTIFIER)
         
@@ -179,7 +181,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate,SFAuthenticationManagerDel
     
     func locationManager(manager: CLLocationManager!, didEnterRegion region: CLRegion!) {
         
-        self.sendLocalNotificationWithMessage("Found Conversations!")
+        self.sendLocalNotificationWithMessage("Found Conversations!.")
         
         self.locationManager!.startRangingBeaconsInRegion(self.beaconRegion)
     }
@@ -364,6 +366,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate,SFAuthenticationManagerDel
         for rangedBeacon in rangedBeacons {
             self.rangedBeaconsSet.insert(rangedBeacon)
         }
+    }
+    
+    func hasConnectivity() -> Bool {
+        let reachability: Reachability = Reachability.reachabilityForInternetConnection()
+        let networkStatus: Int = reachability.currentReachabilityStatus().value
+        return networkStatus != 0
     }
 }
 
