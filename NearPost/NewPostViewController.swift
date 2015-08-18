@@ -16,6 +16,7 @@ class NewPostViewController: UIViewController,UITextViewDelegate {
     @IBOutlet var userImageView: UIImageView?
     @IBOutlet var postTextView: UITextView?
     @IBOutlet var placeHolderLabel: UILabel?
+    var bulkpostcnt:Int = 0
     
     var postButton:UIBarButtonItem?
 
@@ -34,6 +35,7 @@ class NewPostViewController: UIViewController,UITextViewDelegate {
         
         self.postButton = UIBarButtonItem(title: "Post", style: .Done, target: self, action: "post")
         self.navigationItem.setRightBarButtonItem(postButton, animated: true)
+        self.navigationItem.setLeftBarButtonItem(UIBarButtonItem(title: "BULK", style: .Done, target: self, action: "bulk"), animated: true)
         postButton?.enabled = false
         
         self.setNavStyle()
@@ -102,6 +104,35 @@ class NewPostViewController: UIViewController,UITextViewDelegate {
         }
     }
     
+    func bulk() {
+        
+        bulkpostcnt = 0
+        
+        var timer:NSTimer = NSTimer.scheduledTimerWithTimeInterval(1   , target: self, selector: Selector("bulkPost"), userInfo: nil, repeats: true);
+    }
+    
+    func bulkPost() {
+        
+        bulkpostcnt++
+        
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        
+        var s:String = "Post \(bulkpostcnt)"
+        
+        println(s)
+        
+        appDelegate.post(s) as (sucess:Bool,beaconId:String)?
+        
+//        for index in 1...10 {
+//            
+//            var s:String = "Post \(bulkpostcnt) ------ \(index) - \(NSDate())"
+//            
+//            println(s)
+//            
+//            appDelegate.post(s) as (sucess:Bool,beaconId:String)?
+//        }
+    }
+    
     func post() {
         
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
@@ -120,6 +151,8 @@ class NewPostViewController: UIViewController,UITextViewDelegate {
             
         }
     }
+    
+    
     
     func showAlert(title:String,message:String) {
         

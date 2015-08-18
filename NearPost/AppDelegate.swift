@@ -1,6 +1,6 @@
 //
 //  AppDelegate.swift
-//  DreamBook
+//  NearPost
 //
 //  Created by Hari Kolasani on 5/23/15.
 //  Copyright (c) 2015 BlueCloud Systems. All rights reserved.
@@ -17,7 +17,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate,SFAuthenticationManagerDel
     var window: UIWindow?
     
     var navController:UINavigationController?
-    
     var feedViewController:FeedViewController?
     
     var userThumbURL:String = ""
@@ -28,8 +27,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate,SFAuthenticationManagerDel
     var beaconRegion:CLBeaconRegion?
     var locationManager: CLLocationManager?
     
+    var previouslyGatheredBeaconsSet:Set<String> = Set<String>()
     var previouslyRangedBeaconsSet:Set<String> = Set<String>()
     var rangedBeaconsSet:Set<String> = Set<String>()
+    
+    var images:Dictionary<String, NSData> = Dictionary<String, NSData>()
     
     var currentYear:Int = 2015
     
@@ -40,11 +42,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate,SFAuthenticationManagerDel
     
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         
-        self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
-        
-        //TODO: Intiialize App Settings.
-        
-        self.initializeAppViewState()
+        //self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
         
         if !self.hasConnectivity() {
             self.showAlert("Warning!", message: "NearPost requires Internet Connection to function!")
@@ -80,8 +78,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate,SFAuthenticationManagerDel
         
         self.startLookingForbeacons()
         
-        self.loginToSFDC()
-        
         return true
     }
     
@@ -92,25 +88,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate,SFAuthenticationManagerDel
         self.window?.rootViewController = initialViewController
         self.window?.backgroundColor = UIColor.whiteColor()
         self.window?.makeKeyAndVisible()
-    }
-    
-    //********************************************** SFDC *************************************************//
-    
-    func loginToSFDC() {
-        
-        SFAuthenticationManager.sharedManager().loginWithCompletion( { oAuthInfo in
-            
-            let userInfoDict = SFDCDataManager.getUserInfo()
-            let photosDict:NSDictionary = userInfoDict.objectForKey("photos") as! NSDictionary
-            self.userThumbURL  = photosDict.objectForKey("thumbnail") as! String
-
-                println(SFDCDataManager.getAccessToken())
-            
-                self.setupRootViewController()
-            
-            }, failure: { oAuthInfo,error in
-                SFAuthenticationManager.sharedManager().logout()
-        })
     }
     
     func setupRootViewController() {
@@ -126,15 +103,48 @@ class AppDelegate: UIResponder, UIApplicationDelegate,SFAuthenticationManagerDel
         
         self.window?.rootViewController = self.navController
     }
+
+    //********************************************** SFDC *************************************************//
+    
+    func loginToSFDC(loggedIn:(Void)->(Void)) {
+        
+        
+        SFAuthenticationManager.sharedManager().loginWithCompletion( { oAuthInfo in
+            
+            let userInfoDict = SFDCDataManager.getUserInfo()
+            let photosDict:NSDictionary = userInfoDict.objectForKey("photos") as! NSDictionary
+            self.userThumbURL  = photosDict.objectForKey("thumbnail") as! String
+
+                println(SFDCDataManager.getAccessToken())
+            
+                let storyboard:UIStoryboard = UIStoryboard(name:"Main", bundle:nil)
+                //var feedViewController:FeedViewController = storyboard.instantiateViewControllerWithIdentifier("FeedView") as! FeedViewController
+            
+                self.navController =  storyboard.instantiateViewControllerWithIdentifier("NavController") as? UINavigationController
+            
+                if let viewControllers = self.navController!.viewControllers {
+                    self.feedViewController = viewControllers.last as? FeedViewController
+                }
+
+                loggedIn()
+            
+            }, failure: { oAuthInfo,error in
+                SFAuthenticationManager.sharedManager().logout()
+        })
+    }
     
     func userAccountManager(userAccountManager: SFUserAccountManager!, didSwitchFromUser fromUser: SFUserAccount!, toUser: SFUserAccount!) {
         //self.showAlert("Info", message: "Login Host Changed")
-        self.loginToSFDC()
+        self.loginToSFDC {
+            self.setupRootViewController()
+        }
     }
     
     func authManagerDidLogout(manager: SFAuthenticationManager!) {
         //self.showAlert("Info", message: "Logged Out")
-        self.loginToSFDC()
+        self.loginToSFDC {
+            self.setupRootViewController()
+        }
     }
  
     
@@ -181,7 +191,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate,SFAuthenticationManagerDel
     
     func locationManager(manager: CLLocationManager!, didEnterRegion region: CLRegion!) {
         
-        self.sendLocalNotificationWithMessage("Found Conversations!.")
+        self.sendLocalNotificationWithMessage("Found NearPost Beacons!")
         
         self.locationManager!.startRangingBeaconsInRegion(self.beaconRegion)
     }
@@ -250,6 +260,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate,SFAuthenticationManagerDel
         self.peripheralManager!.startAdvertising(peripheralData);
     }
     
+    func gatherRangedBeacons(rangedBeacons:[CLBeacon]){
+        
+        for rangedBeacon in rangedBeacons {
+            let rangedBeaconId:String = self.getBeaconId(rangedBeacon.major.integerValue,minor:rangedBeacon.minor.integerValue)
+            self.rangedBeaconsSet.insert(rangedBeaconId)
+        }
+        
+        let newlyRangedBeaconsSet:Set<String> = Set(self.rangedBeaconsSet.subtract(self.previouslyGatheredBeaconsSet))
+        
+        self.previouslyGatheredBeaconsSet = Set(self.rangedBeaconsSet)
+        
+        if (newlyRangedBeaconsSet.count > 0) {
+            if (newlyRangedBeaconsSet.count > 1) {
+                self.sendLocalNotificationWithMessage("\(newlyRangedBeaconsSet.count) New Posts!.")
+            }
+            else {
+                self.sendLocalNotificationWithMessage("New Post!")
+            }
+        }
+    }
+    
     func getRangedBeacons()->Set<String> {
         
         let beaconsSet:Set<String> = Set(self.rangedBeaconsSet.subtract(self.previouslyRangedBeaconsSet))
@@ -257,14 +288,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate,SFAuthenticationManagerDel
         self.initRangedBeacons()
         
         return beaconsSet
-    }
-    
-    func gatherRangedBeacons(rangedBeacons:[CLBeacon]){
-        
-        for rangedBeacon in rangedBeacons {
-            let rangedBeaconId:String = self.getBeaconId(rangedBeacon.major.integerValue,minor:rangedBeacon.minor.integerValue)
-            self.rangedBeaconsSet.insert(rangedBeaconId)
-        }
     }
     
     func initRangedBeacons() {
@@ -314,6 +337,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate,SFAuthenticationManagerDel
     func sendLocalNotificationWithMessage(message: String!) {
         let notification:UILocalNotification = UILocalNotification()
         notification.alertBody = message
+    
         //notification.soundName = "tos_beep.caf";
         UIApplication.sharedApplication().scheduleLocalNotification(notification)
     }
@@ -372,6 +396,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate,SFAuthenticationManagerDel
         let reachability: Reachability = Reachability.reachabilityForInternetConnection()
         let networkStatus: Int = reachability.currentReachabilityStatus().value
         return networkStatus != 0
+    }
+    
+    func applicationDidReceiveMemoryWarning(application: UIApplication) {
+        //NSURLCache.sharedURLCache().removeAllCachedResponses()
+        self.images =  Dictionary<String, NSData>()
     }
 }
 

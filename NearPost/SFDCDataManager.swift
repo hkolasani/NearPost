@@ -1,6 +1,6 @@
 //
 //  SFDCDataManager.swift
-//  DreamBook
+//  NearPost
 //
 //  Created by Hari Kolasani on 5/27/15.
 //  Copyright (c) 2015 BlueCloud Systems. All rights reserved.
@@ -173,7 +173,7 @@ class SFDCDataManager {
                 return false
             }
             else if responseDataString == nil {
-                println("Post failed")
+                return false
             }
             else {
             }
@@ -263,6 +263,10 @@ class SFDCDataManager {
         
         if let createdByDict = row["CreatedBy"] as? NSDictionary {
             post.createdBy = createdByDict["Name"] as? String
+        }
+        
+        if let createdById = row["CreatedById"] as? String {
+            post.createdById = createdById
         }
         
         if let postBody:String = row["Body"]  as? String {

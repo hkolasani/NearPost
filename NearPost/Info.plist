@@ -28,14 +28,14 @@
 	<true/>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>NeoPost Requires this inorder to receive near by Posts</string>
-	<key>NSMainNibFile</key>
-	<string>LaunchView</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>location</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchView</string>
+	<key>UIMainStoryboardFile</key>
+	<string>Main</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>

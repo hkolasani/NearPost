@@ -1,6 +1,6 @@
 //
-//  DreamBook-Bridging-Header.h
-//  DreamBook
+//  NearPost-Bridging-Header.h
+//  NearPost
 //
 //  Created by Hari Kolasani on 5/27/15.
 //  Copyright (c) 2015 BlueCloud Systems. All rights reserved.

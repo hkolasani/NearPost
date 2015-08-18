@@ -1,6 +1,6 @@
 //
 //  Post.swift
-//  DreamBook
+//  NearPost
 //
 //  Created by Hari Kolasani on 6/3/15.
 //  Copyright (c) 2015 BlueCloud Systems. All rights reserved.
@@ -17,6 +17,7 @@ class Post: NSObject {
     var postBody:String?
     var postText:String?
     var createdBy:String?
+    var createdById:String?
     var thumbURL:String?
     var thumbnail:NSData?
 

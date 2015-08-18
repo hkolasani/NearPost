@@ -479,6 +479,7 @@
 		1B779F5D1B16AACC00911AC9 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				1BC87F0C1B812FBE00D38D7F /* AppIcons */,
 				1B999CF61B7D18FB0088F236 /* Images */,
 				1B779F581B16AA0100911AC9 /* SalesforceSDKResources.bundle */,
 				1B779F591B16AA0100911AC9 /* Settings.bundle */,
@@ -512,6 +513,13 @@
 				1B9F14F21B44C3930078B73E /* FMResultSet.m */,
 			);
 			path = fmdb;
+			sourceTree = "<group>";
+		};
+		1BC87F0C1B812FBE00D38D7F /* AppIcons */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = AppIcons;
 			sourceTree = "<group>";
 		};
 		1BD3AB211B11383900AFCB16 = {

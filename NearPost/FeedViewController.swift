@@ -4,7 +4,7 @@
 //
 //  Created by Hari Kolasani on 7/29/15.
 //  Copyright (c) 2015 BlueCloud Systems. All rights reserved.
-//
+//q
 
 import Foundation
 import UIKit
@@ -21,15 +21,24 @@ class FeedViewController: UITableViewController {
     var timer:NSTimer?
     var timer1:NSTimer?
     
+    var logIn:Bool = true
+    
     let refreshQueue = dispatch_queue_create("com.bluecloudsys.NearPost.Refresh", nil); //creates a serial queue
+    let sfdcQueue = dispatch_queue_create("com.bluecloudsys.NearPost.SFDC", nil); //creates a serial queue
+    
+    var postButton:UIBarButtonItem?
     
     override func viewDidLoad() {
         
         super.viewDidLoad()
         
+        self.logIn = true
+        
         self.navigationItem.title = "Near Posts"
         
-        self.navigationItem.setRightBarButtonItem(UIBarButtonItem(barButtonSystemItem: .Compose, target: self, action: "newPost"), animated: true)
+        self.postButton = UIBarButtonItem(barButtonSystemItem: .Compose, target: self, action: "newPost")
+        self.postButton?.enabled = false
+        self.navigationItem.setRightBarButtonItem(self.postButton, animated: true)
         //self.navigationItem.setLeftBarButtonItem(UIBarButtonItem(barButtonSystemItem: .Refresh, target: self, action: "refresh"), animated: true)
         
         self.tableView.rowHeight  = UITableViewAutomaticDimension
@@ -60,15 +69,30 @@ class FeedViewController: UITableViewController {
         self.navigationController?.navigationBar.translucent = false
         
         UINavigationBar.appearance().tintColor = UIColor.whiteColor()
-    }
-    
-    override func viewDidAppear(animated: Bool) {
         
         if !self.hasConnectivity() {
             self.showAlert("Warning!", message: "NearPost requires Internet Connection to function!")
         }
+    }
+    
+    override func viewDidAppear(animated: Bool) {
         
         super.viewDidAppear(animated)
+        
+        if self.logIn {
+            
+            let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        
+            appDelegate.loginToSFDC {
+                self.logIn = false
+                self.loggedIn()
+            }
+        }
+    }
+    
+    func loggedIn() {
+        
+        self.postButton?.enabled = true
         
         self.refresh()
         
@@ -109,14 +133,16 @@ class FeedViewController: UITableViewController {
             var rangedBeaconsSet:Set<String> = Set(appDelegate.getRangedBeacons())
             
             if (rangedBeaconsSet.count > 0  || self.unfetchedBeaconsSet.count > 0) {
-                dispatch_async(dispatch_get_main_queue(), {
+                dispatch_async(self.sfdcQueue!) {
                     self.loadPosts(rangedBeaconsSet)
-                })
+                }
             }
         }
     }
     
     func loadPosts (rangedBeaconsSet:Set<String>) {
+        
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         
         var tobeFetchedBeaconsSet:Set<String> = Set<String>()
         
@@ -146,8 +172,14 @@ class FeedViewController: UITableViewController {
             var newPost:Post = newPosts[i]
             
             if let thumbURL = newPost.thumbURL {
-                if let imageData = SFDCDataManager.getImage(thumbURL) {
-                    newPost.thumbnail = imageData
+                if let cachedImage = appDelegate.images[newPost.createdById!]  {
+                    newPost.thumbnail = cachedImage 
+                }
+                else {
+                    if let imageData = SFDCDataManager.getImage(thumbURL) {
+                        newPost.thumbnail = imageData
+                        appDelegate.images[newPost.createdById!] = imageData
+                    }
                 }
             }
             
@@ -162,9 +194,9 @@ class FeedViewController: UITableViewController {
         //You can't rely on the results being available in real-time, or even within a few seconds after the final commit.
         self.unfetchedBeaconsSet = Set(tobeFetchedBeaconsSet.subtract(fetchedBeaconsSet))
         
-        self.insertRowsForNewPosts(newPostsWithImages)
-        
-        //var newPosts:[Post] = SFDCDataManager.testFetchPosts(self.newlyRangedBeacons)
+        dispatch_async(dispatch_get_main_queue(), {
+            self.insertRowsForNewPosts(newPostsWithImages)
+        })
     }
     
     func newPost() {
