@@ -86,6 +86,12 @@ class NewPostViewController: UIViewController,UITextViewDelegate {
     override func viewDidAppear(animated: Bool) {
         
         super.viewDidAppear(animated)
+        
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        
+        appDelegate.relogin {
+            self.postButton?.enabled = true
+        }
     }
     
     func textViewDidChange(textView: UITextView) {

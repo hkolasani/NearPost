@@ -21,8 +21,6 @@ class FeedViewController: UITableViewController {
     var timer:NSTimer?
     var timer1:NSTimer?
     
-    var logIn:Bool = true
-    
     let refreshQueue = dispatch_queue_create("com.bluecloudsys.NearPost.Refresh", nil); //creates a serial queue
     let sfdcQueue = dispatch_queue_create("com.bluecloudsys.NearPost.SFDC", nil); //creates a serial queue
     
@@ -31,8 +29,6 @@ class FeedViewController: UITableViewController {
     override func viewDidLoad() {
         
         super.viewDidLoad()
-        
-        self.logIn = true
         
         self.navigationItem.title = "Near Posts"
         
@@ -73,20 +69,22 @@ class FeedViewController: UITableViewController {
         if !self.hasConnectivity() {
             self.showAlert("Warning!", message: "NearPost requires Internet Connection to function!")
         }
+        
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        
+        appDelegate.loginToSFDC {
+
+        }
     }
     
     override func viewDidAppear(animated: Bool) {
         
         super.viewDidAppear(animated)
         
-        if self.logIn {
-            
-            let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         
-            appDelegate.loginToSFDC {
-                self.logIn = false
-                self.loggedIn()
-            }
+        appDelegate.relogin {
+            self.loggedIn()
         }
     }
     
@@ -97,7 +95,6 @@ class FeedViewController: UITableViewController {
         self.refresh()
         
         self.startTimer()
-
     }
     
     func startTimer() {
@@ -290,9 +287,4 @@ class FeedViewController: UITableViewController {
         let networkStatus: Int = reachability.currentReachabilityStatus().value
         return networkStatus != 0
     }
-
 }
-
-
-
-

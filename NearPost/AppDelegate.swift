@@ -106,6 +106,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate,SFAuthenticationManagerDel
 
     //********************************************** SFDC *************************************************//
     
+    func relogin(loggedIn:(Void)->(Void)) {
+        
+        SFAuthenticationManager.sharedManager().loginWithCompletion( { oAuthInfo in
+            loggedIn()
+            }, failure: { oAuthInfo,error in
+                SFAuthenticationManager.sharedManager().logout()
+        })
+    }
+    
     func loginToSFDC(loggedIn:(Void)->(Void)) {
         
         
