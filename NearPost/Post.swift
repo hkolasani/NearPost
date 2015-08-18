@@ -12,7 +12,7 @@ import UIKit
 class Post: NSObject {
     
     var beaconId:String?
-    var dateCreated:NSDate?
+    var created:String?
     var postId:String?
     var postBody:String?
     var postText:String?

@@ -86,24 +86,19 @@ class SFDCDataManager {
     
     class func fetchPosts(beacons:[String])-> [Post] {
         
-        var beaconsPred:String = buildBeaconsPred(beacons)
-        
-        var queryString:String = "find \(beaconsPred)returning feeditem(Id,Body, CreatedById,CreatedBy.Name,CreatedDate WHERE ParentId='\(SFDC_SETTINGS.nesrPostGroupId)')"
-        
-        println(queryString)
+        var queryString:String = buildFeedQueryString(beacons)
         
         queryString = queryString.stringByAddingPercentEncodingWithAllowedCharacters(.URLHostAllowedCharacterSet())!
         
-        var soslRequestURL:String = "\(SFDC_SETTINGS.apiURL)/search?q=\(queryString)"
+        var requestURL:String = "\(SFDC_SETTINGS.communitiesURL)/\(SFDC_SETTINGS.communityId)/chatter/feeds/record/\(SFDC_SETTINGS.nearPostGroupId)/feed-elements?q=\(queryString)"
         
         let accessToken = getAccessToken()
         
         println(accessToken)
         
-        var responseData:NSData? = SFDCDataManager.sendSyncRequest(soslRequestURL, accessToken:accessToken)
+        var responseData:NSData? = SFDCDataManager.sendSyncRequest(requestURL, accessToken:accessToken)
         
         return buildPosts(responseData)
-
     }
     
     class func buildPosts(responseData:NSData?) -> [Post] {
@@ -124,13 +119,16 @@ class SFDCDataManager {
                     
                     let parsedObject: AnyObject? = NSJSONSerialization.JSONObjectWithData(responseData!,options: NSJSONReadingOptions.AllowFragments,error:&parseError)
                     
-                    if let rows = parsedObject as? NSArray {
-                        
-                        for row in rows {
+                    if let results = parsedObject as? NSDictionary {
+                    
+                        if let elements = results["elements"] as? NSArray {
+                         
+                            for element in elements {
                             
-                            var post:Post = buildPost(row as! NSDictionary)
+                                var post:Post = buildPost(element as! NSDictionary)
                             
-                            posts.append(post)
+                                posts.append(post)
+                            }
                         }
                     }
                     else {
@@ -147,9 +145,9 @@ class SFDCDataManager {
         
         let accessToken = getAccessToken()
 
-        var postRequestBody:String =  "{\"body\" : {\"messageSegments\" : [{\"type\" : \"Text\",\"text\" : \"\(postBody)\"}]},\"feedElementType\" : \"FeedItem\",\"subjectId\" : \"\(SFDC_SETTINGS.nesrPostGroupId)\"}"
+        var postRequestBody:String =  "{\"body\" : {\"messageSegments\" : [{\"type\" : \"Text\",\"text\" : \"\(postBody)\"}]},\"feedElementType\" : \"FeedItem\",\"subjectId\" : \"\(SFDC_SETTINGS.nearPostGroupId)\"}"
         
-        var postURL:String = "\(SFDC_SETTINGS.apiURL)/connect/communities/\(SFDC_SETTINGS.communityId)/chatter/feed-elements"
+        var postURL:String = "\(SFDC_SETTINGS.communitiesURL)/\(SFDC_SETTINGS.communityId)/chatter/feed-elements"
         
         var request = NSMutableURLRequest(URL: NSURL(string:postURL)!)
         var response: NSURLResponse?
@@ -242,46 +240,48 @@ class SFDCDataManager {
         return pred
     }
     
-    class func buildPost(row:NSDictionary) -> Post {
+    class func buildFeedQueryString(beacons:[String])->String {
+        
+        var pred:String = ""
+        
+        var cnt:Int = 0
+        
+        for beacon in beacons {
+            if(cnt > 0) {
+                pred = "\(pred) OR "
+            }
+            pred = "\(beacon)*"
+            
+            cnt++
+        }
+        
+        return pred
+    }
+    
+    class func buildPost(element:NSDictionary) -> Post {
     
         var post:Post = Post()
         post.postBody = ""
         post.postText = ""
        
-        post.postId = row["Id"] as? String
+        post.postId = element["id"] as? String
+        post.created = element["relativeCreatedDate"] as? String
         
-        if let dateStr = row["CreatedDate"] as? String {
-            if(count(dateStr) > 19) {
-                let dateFormatter = NSDateFormatter()
-                dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
-                dateFormatter.timeZone = NSTimeZone(name:"GMT")
-                let index: String.Index = advance(dateStr.startIndex, 19)
-                let dateSubStr = dateStr.substringToIndex(index)
-                post.dateCreated = dateFormatter.dateFromString(dateSubStr)
+        if let actor = element["actor"] as? NSDictionary {
+            post.createdBy = actor["displayName"] as? String
+            post.createdById = actor["id"] as? String
+            if let photoDict = actor["photo"] as? NSDictionary {
+                post.thumbURL = photoDict["smallPhotoUrl"] as? String
             }
         }
         
-        if let createdByDict = row["CreatedBy"] as? NSDictionary {
-            post.createdBy = createdByDict["Name"] as? String
-        }
-        
-        if let createdById = row["CreatedById"] as? String {
-            post.createdById = createdById
-        }
-        
-        if let postBody:String = row["Body"]  as? String {
-            post.postBody = postBody
-            if let rangeOfPost = postBody.rangeOfString("POSTTEXT:") {
-                post.beaconId = postBody.substringToIndex(rangeOfPost.startIndex)
-                var pBody:String? = postBody.substringFromIndex(rangeOfPost.endIndex)
-                if pBody != nil {
-                    if let rangeOfT = pBody!.rangeOfString("USERTHUMB:",options: .BackwardsSearch) {
-                        post.postText = pBody!.substringToIndex(rangeOfT.startIndex)
-                    }
+        if let bodyDict = element["body"] as? NSDictionary {
+            if let postBody:String = bodyDict["text"]  as? String {
+                post.postBody = postBody
+                if let rangeOfPost = postBody.rangeOfString("POSTTEXT:") {
+                    post.beaconId = postBody.substringToIndex(rangeOfPost.startIndex)
+                    post.postText = postBody.substringFromIndex(rangeOfPost.endIndex)
                 }
-            }
-            if let rangeOfThumb:Range = postBody.rangeOfString("USERTHUMB:",options: .BackwardsSearch) {
-                post.thumbURL = postBody.substringFromIndex(rangeOfThumb.endIndex)
             }
         }
         

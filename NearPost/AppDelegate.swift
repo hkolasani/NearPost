@@ -236,7 +236,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate,SFAuthenticationManagerDel
         
         var beaconId:String =  self.getBeaconId(Int(majorInt),minor:Int(minorInt))
         
-        var postBody:String = "\(beaconId)POSTTEXT:\(postText).USERTHUMB:\(self.userThumbURL)"
+        var postBody:String = "\(beaconId)POSTTEXT:\(postText)"
         
         let success = SFDCDataManager.postPost(postBody)
         
@@ -287,6 +287,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate,SFAuthenticationManagerDel
             else {
                 self.sendLocalNotificationWithMessage("New Post!")
             }
+            UIApplication.sharedApplication().applicationIconBadgeNumber = 6;
         }
     }
     
