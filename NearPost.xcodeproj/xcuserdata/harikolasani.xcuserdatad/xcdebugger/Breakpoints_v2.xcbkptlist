@@ -154,11 +154,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "NearPost/SFDCDataManager.swift"
-            timestampString = "461632968.282712"
+            timestampString = "461717840.339073"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "193"
-            endingLineNumber = "193"
+            startingLineNumber = "238"
+            endingLineNumber = "238"
             landmarkName = "sendSyncRequest(_:accessToken:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -170,11 +170,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "NearPost/SFDCDataManager.swift"
-            timestampString = "461632968.282712"
+            timestampString = "461702986.185918"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "145"
-            endingLineNumber = "145"
+            startingLineNumber = "165"
+            endingLineNumber = "165"
             landmarkName = "postPost(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -186,11 +186,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "NearPost/SFDCDataManager.swift"
-            timestampString = "461632968.282712"
+            timestampString = "461702986.185918"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "164"
-            endingLineNumber = "164"
+            startingLineNumber = "184"
+            endingLineNumber = "184"
             landmarkName = "postPost(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -202,11 +202,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "NearPost/SFDCDataManager.swift"
-            timestampString = "461632968.282712"
+            timestampString = "461702986.185918"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "168"
-            endingLineNumber = "168"
+            startingLineNumber = "188"
+            endingLineNumber = "188"
             landmarkName = "postPost(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -218,12 +218,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "NearPost/SFDCDataManager.swift"
-            timestampString = "461632968.282712"
+            timestampString = "461702986.185918"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "129"
-            endingLineNumber = "129"
-            landmarkName = "buildPosts(_:)"
+            startingLineNumber = "149"
+            endingLineNumber = "149"
+            landmarkName = "parseFetchResults(_:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -234,11 +234,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "NearPost/SFDCDataManager.swift"
-            timestampString = "461632968.282712"
+            timestampString = "461717840.339073"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "255"
-            endingLineNumber = "255"
+            startingLineNumber = "300"
+            endingLineNumber = "300"
             landmarkName = "buildFeedQueryString(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -250,11 +250,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "NearPost/SFDCDataManager.swift"
-            timestampString = "461632968.282712"
+            timestampString = "461717840.339073"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "245"
-            endingLineNumber = "245"
+            startingLineNumber = "290"
+            endingLineNumber = "290"
             landmarkName = "buildFeedQueryString(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -426,12 +426,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "NearPost/SFDCDataManager.swift"
-            timestampString = "461629177.555113"
+            timestampString = "461702986.185918"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "107"
-            endingLineNumber = "107"
-            landmarkName = "buildPosts(_:)"
+            startingLineNumber = "127"
+            endingLineNumber = "127"
+            landmarkName = "parseFetchResults(_:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -442,12 +442,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "NearPost/SFDCDataManager.swift"
-            timestampString = "461629177.555113"
+            timestampString = "461702986.185918"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "109"
-            endingLineNumber = "109"
-            landmarkName = "buildPosts(_:)"
+            startingLineNumber = "129"
+            endingLineNumber = "129"
+            landmarkName = "parseFetchResults(_:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -874,11 +874,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "NearPost/SFDCDataManager.swift"
-            timestampString = "461632968.282712"
+            timestampString = "461717840.339073"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "265"
-            endingLineNumber = "265"
+            startingLineNumber = "310"
+            endingLineNumber = "310"
             landmarkName = "buildPost(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -906,11 +906,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "NearPost/SFDCDataManager.swift"
-            timestampString = "461632968.282712"
+            timestampString = "461702986.185918"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "163"
-            endingLineNumber = "163"
+            startingLineNumber = "183"
+            endingLineNumber = "183"
             landmarkName = "postPost(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -922,11 +922,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "NearPost/SFDCDataManager.swift"
-            timestampString = "461632968.282712"
+            timestampString = "461702986.185918"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "161"
-            endingLineNumber = "161"
+            startingLineNumber = "181"
+            endingLineNumber = "181"
             landmarkName = "postPost(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -1050,12 +1050,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "NearPost/SFDCDataManager.swift"
-            timestampString = "461629143.127519"
+            timestampString = "461702986.185918"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "116"
-            endingLineNumber = "116"
-            landmarkName = "buildPosts(_:)"
+            startingLineNumber = "136"
+            endingLineNumber = "136"
+            landmarkName = "parseFetchResults(_:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1066,12 +1066,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "NearPost/SFDCDataManager.swift"
-            timestampString = "461631034.479574"
+            timestampString = "461702986.185918"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "106"
-            endingLineNumber = "106"
-            landmarkName = "buildPosts(_:)"
+            startingLineNumber = "126"
+            endingLineNumber = "126"
+            landmarkName = "parseFetchResults(_:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1082,12 +1082,92 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "NearPost/SFDCDataManager.swift"
-            timestampString = "461632953.901659"
+            timestampString = "461717840.339073"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "267"
-            endingLineNumber = "267"
+            startingLineNumber = "312"
+            endingLineNumber = "312"
             landmarkName = "buildPost(_:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "NearPost/SFDCDataManager.swift"
+            timestampString = "461717840.339073"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "196"
+            endingLineNumber = "196"
+            landmarkName = "postPost(_:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "NearPost/SFDCDataManager.swift"
+            timestampString = "461717840.339073"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "196"
+            endingLineNumber = "196"
+            landmarkName = "postPost(_:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "NearPost/SFDCDataManager.swift"
+            timestampString = "461702925.836357"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "97"
+            endingLineNumber = "97"
+            landmarkName = "getPostById(_:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "NearPost/SFDCDataManager.swift"
+            timestampString = "461717840.339073"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "194"
+            endingLineNumber = "194"
+            landmarkName = "postPost(_:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "NearPost/SFDCDataManager.swift"
+            timestampString = "461703387.013608"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "96"
+            endingLineNumber = "96"
+            landmarkName = "getPostById(_:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

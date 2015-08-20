@@ -17,6 +17,7 @@ class SFDCSettings:NSObject {
     var nearPostGroupId:String = "0F930000000blOE"   //Near Post Group Id
     var communityId:String = "0DB30000000072LGAQ"   //Id of the Salesfoce Success Community
     var communitiesURL:String = "https://success.salesforce.com/services/data/v34.0/connect/communities"
+    var hostURL:String = "https://success.salesforce.com/services/data/v34.0"
     
     override init() {
         

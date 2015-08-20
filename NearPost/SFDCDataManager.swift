@@ -83,7 +83,24 @@ class SFDCDataManager {
         
         return newPosts
     }
-    
+
+    class func getPostById(postId:String)-> Post? {
+        
+        var requestURL:String = "\(SFDC_SETTINGS.hostURL)/sobjects/CollaborationGroupFeed/\(postId)"
+        
+        let accessToken = getAccessToken()
+        
+        println(accessToken)
+        
+        if let responseData:NSData = SFDCDataManager.sendSyncRequest(requestURL, accessToken:accessToken) {
+            if let dataString = NSString(data: responseData, encoding:NSUTF8StringEncoding) {
+                println(dataString)
+            }
+        }
+        
+        return Post()
+    }
+
     class func fetchPosts(beacons:[String])-> [Post] {
         
         var queryString:String = buildFeedQueryString(beacons)
@@ -96,12 +113,15 @@ class SFDCDataManager {
         
         println(accessToken)
         
-        var responseData:NSData? = SFDCDataManager.sendSyncRequest(requestURL, accessToken:accessToken)
-        
-        return buildPosts(responseData)
+        if let responseData:NSData = SFDCDataManager.sendSyncRequest(requestURL, accessToken:accessToken) {
+            return parseFetchResults(responseData)
+        }
+        else {
+            return [Post]()
+        }
     }
     
-    class func buildPosts(responseData:NSData?) -> [Post] {
+    class func parseFetchResults(responseData:NSData?) -> [Post] {
         
         var posts:[Post] = [Post]()
         
@@ -159,25 +179,50 @@ class SFDCDataManager {
         
         request.HTTPBody =  (postRequestBody as NSString).dataUsingEncoding(NSUTF8StringEncoding)
         
-        var responseData:NSData? = NSURLConnection.sendSynchronousRequest(request, returningResponse: &response, error:&error)
+        if let responseData:NSData = NSURLConnection.sendSynchronousRequest(request, returningResponse: &response, error:&error) {
         
-        if error != nil {
-            return false
-        }
-        else {
-            let responseDataString = NSString(data: responseData!, encoding:NSUTF8StringEncoding)
-            if (responseDataString!.lowercaseString.rangeOfString("errorcode") != nil) {
-                println(responseDataString)
-                return false
-            }
-            else if responseDataString == nil {
+            if error != nil {
                 return false
             }
             else {
+                if let responseDataString = NSString(data: responseData, encoding:NSUTF8StringEncoding) {
+                    if (responseDataString.lowercaseString.rangeOfString("errorcode") != nil) {
+                        //println(responseDataString)
+                        return false
+                    }
+                    else {
+                        if let post = getCreatedPost(responseData) {
+                            if let post = getPostById(post.postId!) {
+                                println("Got it")
+                            }
+                        }
+                    }
+                }
+                else {
+                    return false
+                }
             }
         }
         
         return true
+    }
+    
+    class func getCreatedPost(newPostResponseData:NSData)->Post? {
+        
+        var parseError: NSError?
+        
+        var post:Post?
+        
+        let parsedObject: AnyObject? = NSJSONSerialization.JSONObjectWithData(newPostResponseData,options: NSJSONReadingOptions.AllowFragments,error:&parseError)
+        
+        if let element = parsedObject as? NSDictionary {
+            post = buildPost(element)
+        }
+        else {
+            println("JSON Parse Error")
+        }
+        
+        return post
     }
 
     class func sendSyncRequest(urlString:String,accessToken:String)->NSData? {
