@@ -64,8 +64,6 @@ class SFDCDataManager {
         
         let accessToken = getAccessToken()
         
-        println(accessToken)
-        
         return SFDCDataManager.sendSyncRequest(picURL, accessToken:accessToken)
     }
     
@@ -114,8 +112,6 @@ class SFDCDataManager {
             let dataString = NSString(data: responseData!, encoding:NSUTF8StringEncoding)
             
             if dataString != nil {
-                
-                println(dataString)
                 
                 if (dataString!.lowercaseString.rangeOfString("\"errorcode\":") == nil) {
                     
@@ -176,11 +172,8 @@ class SFDCDataManager {
                         println(responseDataString)
                     }
                     else {
-                        if let post = getCreatedPost(responseData) {
-                            if let post = getPostById(post.postId!) {
-                                postId = post.postId
-                            }
-                        }
+                        //println(responseDataString)
+                        postId = parseCreatedPost(responseData)
                     }
                 }
             }
@@ -189,22 +182,22 @@ class SFDCDataManager {
         return postId
     }
     
-    class func getCreatedPost(newPostResponseData:NSData)->Post? {
+    class func parseCreatedPost(newPostResponseData:NSData)->String? {
         
         var parseError: NSError?
         
-        var post:Post?
+        var postId:String?
         
         let parsedObject: AnyObject? = NSJSONSerialization.JSONObjectWithData(newPostResponseData,options: NSJSONReadingOptions.AllowFragments,error:&parseError)
         
-        if let element = parsedObject as? NSDictionary {
-            post = buildPost(element)
+        if let result = parsedObject as? NSDictionary {
+            postId  = result["id"] as? String
         }
         else {
             println("JSON Parse Error")
         }
         
-        return post
+        return postId
     }
 
     class func sendSyncRequest(urlString:String,accessToken:String)->NSData? {
@@ -244,7 +237,7 @@ class SFDCDataManager {
         
         let credentials:SFOAuthCredentials  = sfCoordinator.credentials
         
-        println(credentials.accessToken)
+        //println(credentials.accessToken)
 
         return credentials.accessToken
     }
@@ -259,7 +252,7 @@ class SFDCDataManager {
             if(cnt > 0) {
                 pred = "\(pred) , "
             }
-            pred = "\(pred)\(beacon)"
+            pred = "\(pred)'\(beacon)'"
             
             cnt++
         }

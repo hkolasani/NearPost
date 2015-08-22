@@ -217,9 +217,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate,SFAuthenticationManagerDel
     func locationManager(manager: CLLocationManager!, didRangeBeacons beacons: [AnyObject]!, inRegion region: CLBeaconRegion!) {
         
         if(beacons.count > 0) {
-            let reangedBeacon:CLBeacon = beacons[0] as! CLBeacon
-            let rangedBeaconId:String = self.getBeaconId(reangedBeacon.major.integerValue,minor:reangedBeacon.minor.integerValue)
-            //self.sendLocalNotificationWithMessage("ranged :\(rangedBeaconId)")
             dispatch_async(rangedBeaconsAccessQueue) {
                 self.gatherRangedBeacons(beacons as! [CLBeacon])
             }
@@ -300,7 +297,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate,SFAuthenticationManagerDel
             else {
                 self.sendLocalNotificationWithMessage("New Post!")
             }
-            UIApplication.sharedApplication().applicationIconBadgeNumber = 6;
         }
     }
     
@@ -308,17 +304,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate,SFAuthenticationManagerDel
         
         let beaconsSet:Set<String> = Set(self.currentlyRangedBeaconsSet.subtract(self.previouslyRangedBeaconsSet))
         
-        self.initRangedBeacons()
+        self.previouslyRangedBeaconsSet = Set(self.currentlyRangedBeaconsSet)
+        
+        self.currentlyRangedBeaconsSet = Set<String>() //initialize
         
         return beaconsSet
     }
     
-    func initRangedBeacons() {
-        
-        self.previouslyRangedBeaconsSet = Set(self.currentlyRangedBeaconsSet)
-        
-        self.currentlyRangedBeaconsSet = Set<String>() //initialize
-    }
     
     //********************************************** APP DELEGATES *************************************************//
     

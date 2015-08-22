@@ -145,6 +145,8 @@ class FeedViewController: UITableViewController {
             }
             else {
                 
+                println("Got CK PostId")
+                
                 //Now Get feedItems from SFDC using PostIds
                 var newPosts:[Post] = SFDCDataManager.fetchPosts(postIds)
                 var newPostsWithImages:[Post] = [Post]()
@@ -160,6 +162,7 @@ class FeedViewController: UITableViewController {
                     }
                     
                     newPostsWithImages.append(newPost)
+                    println("Got SF Posts")
                 }
                 
                 dispatch_async(dispatch_get_main_queue(), {
