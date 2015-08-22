@@ -13,10 +13,6 @@ import CoreLocation
 class FeedViewController: UITableViewController {
     
     var posts:[Post] = [Post]()
-   
-    var unfetchedBeaconsSet:Set<String> = Set<String>()
-    
-    var allFetchedBeaconsSet:Set<String> = Set<String>()
     
     var timer:NSTimer?
     var timer1:NSTimer?
@@ -129,7 +125,7 @@ class FeedViewController: UITableViewController {
             
             var rangedBeaconsSet:Set<String> = Set(appDelegate.getRangedBeacons())
             
-            if (rangedBeaconsSet.count > 0  || self.unfetchedBeaconsSet.count > 0) {
+            if (rangedBeaconsSet.count > 0) {
                 dispatch_async(self.sfdcQueue!) {
                     self.loadPosts(rangedBeaconsSet)
                 }
@@ -141,59 +137,36 @@ class FeedViewController: UITableViewController {
         
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         
-        var tobeFetchedBeaconsSet:Set<String> = Set<String>()
-        
-        if (rangedBeaconsSet.count > 0) {
-            tobeFetchedBeaconsSet = rangedBeaconsSet.subtract(self.allFetchedBeaconsSet).union(self.unfetchedBeaconsSet)  //include new and unfectehd
-        }
-        else {
-            tobeFetchedBeaconsSet = Set(self.unfetchedBeaconsSet)  //just the unfectehd Beacon Set
-        }
-        
-        if(tobeFetchedBeaconsSet.count == 0) {
-            return
-        }
-        
-        self.unfetchedBeaconsSet = Set<String>() //initialize unfetched beacons set.
-        
-        var tobeFetachedBeacons:[String] = Array(tobeFetchedBeaconsSet)
-        
-        var newPosts:[Post] = SFDCDataManager.fetchPosts(tobeFetachedBeacons)
-        var newPostsWithImages:[Post] = [Post]()
-        
-        
-        var fetchedBeaconsSet:Set<String> = Set<String>()
-        
-        for var i = 0; i < newPosts.count; i++ {
-            
-            var newPost:Post = newPosts[i]
-            
-            if let thumbURL = newPost.thumbURL {
-                if let cachedImage = appDelegate.images[newPost.createdById!]  {
-                    newPost.thumbnail = cachedImage 
-                }
-                else {
-                    if let imageData = SFDCDataManager.getImage(thumbURL) {
-                        newPost.thumbnail = imageData
-                        appDelegate.images[newPost.createdById!] = imageData
-                    }
-                }
+        //Get postIds from CloudKit
+        var ckManager:CKManager = CKManager()
+        ckManager.getPostIds(Array(rangedBeaconsSet)) {postIds,error in
+            if (error != nil) {
+                println("CKRecord GetPostIds Error: \(error.localizedDescription)")
             }
-            
-            fetchedBeaconsSet.insert(newPost.beaconId!)
-            
-            self.allFetchedBeaconsSet.insert(newPost.beaconId!)
-            
-            newPostsWithImages.append(newPost)
+            else {
+                
+                //Now Get feedItems from SFDC using PostIds
+                var newPosts:[Post] = SFDCDataManager.fetchPosts(postIds)
+                var newPostsWithImages:[Post] = [Post]()
+                
+                for var i = 0; i < newPosts.count; i++ {
+                    
+                    var newPost:Post = newPosts[i]
+                    
+                    if let thumbURL = newPost.thumbURL {
+                        if let imageData = SFDCDataManager.getImage(thumbURL) {
+                            newPost.thumbnail = imageData
+                        }
+                    }
+                    
+                    newPostsWithImages.append(newPost)
+                }
+                
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.insertRowsForNewPosts(newPostsWithImages)
+                })
+            }
         }
-        
-        //Gather any unfetched beacons: This scenario exists as SOSL sometimes may not fetch the post right away.SOSL is indexed asynchronously
-        //You can't rely on the results being available in real-time, or even within a few seconds after the final commit.
-        self.unfetchedBeaconsSet = Set(tobeFetchedBeaconsSet.subtract(fetchedBeaconsSet))
-        
-        dispatch_async(dispatch_get_main_queue(), {
-            self.insertRowsForNewPosts(newPostsWithImages)
-        })
     }
     
     func newPost() {

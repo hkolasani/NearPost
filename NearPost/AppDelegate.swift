@@ -29,9 +29,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate,SFAuthenticationManagerDel
     
     var previouslyGatheredBeaconsSet:Set<String> = Set<String>()
     var previouslyRangedBeaconsSet:Set<String> = Set<String>()
-    var rangedBeaconsSet:Set<String> = Set<String>()
-    
-    var images:Dictionary<String, NSData> = Dictionary<String, NSData>()
+    var currentlyRangedBeaconsSet:Set<String> = Set<String>()
+    var allRangedBeaconsSet:Set<String> = Set<String>()
     
     var currentYear:Int = 2015
     
@@ -229,22 +228,36 @@ class AppDelegate: UIResponder, UIApplicationDelegate,SFAuthenticationManagerDel
         }
     }
     
-    func post(postText:String) -> (Bool,String)? {
+    func post(postText:String) -> (String,String?)? {
         
         let majorInt:UInt16 = UInt16(randomInt(0,max: MAX_BEACON_MAJOR_MINOR_NUM))
         var minorInt:UInt16 = UInt16(randomInt(0,max: MAX_BEACON_MAJOR_MINOR_NUM))
         
         var beaconId:String =  self.getBeaconId(Int(majorInt),minor:Int(minorInt))
+
+        var postBody:String = "\(beaconId)POSTTEXT:\(postText).USERTHUMB:\(self.userThumbURL)"
         
-        var postBody:String = "\(beaconId)POSTTEXT:\(postText)"
+        var newPostId:String?
         
-        let success = SFDCDataManager.postPost(postBody)
-        
-        if(success) {
-            self.advertize(majorInt,minor:minorInt)
+        if let postId = SFDCDataManager.postPost(postBody) {
+            
+            newPostId = postId
+            
+            var ckManager:CKManager = CKManager()
+                
+            ckManager.createPost(beaconId,postId:postId) {savedRecord,error in
+                
+                if (error == nil) {
+                        self.advertize(majorInt,minor:minorInt)
+                }
+                else {
+                    newPostId = nil
+                    println("CKRecord Create Error: \(error.localizedDescription)") 
+                }
+            }
         }
         
-        return (success,beaconId)
+        return (beaconId,newPostId)
     }
     
     func stopAdvertizing() {
@@ -273,12 +286,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate,SFAuthenticationManagerDel
         
         for rangedBeacon in rangedBeacons {
             let rangedBeaconId:String = self.getBeaconId(rangedBeacon.major.integerValue,minor:rangedBeacon.minor.integerValue)
-            self.rangedBeaconsSet.insert(rangedBeaconId)
+            self.currentlyRangedBeaconsSet.insert(rangedBeaconId)
         }
         
-        let newlyRangedBeaconsSet:Set<String> = Set(self.rangedBeaconsSet.subtract(self.previouslyGatheredBeaconsSet))
+        let newlyRangedBeaconsSet:Set<String> = Set(self.currentlyRangedBeaconsSet.subtract(self.previouslyGatheredBeaconsSet))
         
-        self.previouslyGatheredBeaconsSet = Set(self.rangedBeaconsSet)
+        self.previouslyGatheredBeaconsSet = Set(self.currentlyRangedBeaconsSet)
         
         if (newlyRangedBeaconsSet.count > 0) {
             if (newlyRangedBeaconsSet.count > 1) {
@@ -293,7 +306,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate,SFAuthenticationManagerDel
     
     func getRangedBeacons()->Set<String> {
         
-        let beaconsSet:Set<String> = Set(self.rangedBeaconsSet.subtract(self.previouslyRangedBeaconsSet))
+        let beaconsSet:Set<String> = Set(self.currentlyRangedBeaconsSet.subtract(self.previouslyRangedBeaconsSet))
         
         self.initRangedBeacons()
         
@@ -302,9 +315,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate,SFAuthenticationManagerDel
     
     func initRangedBeacons() {
         
-        self.previouslyRangedBeaconsSet = Set(self.rangedBeaconsSet)
+        self.previouslyRangedBeaconsSet = Set(self.currentlyRangedBeaconsSet)
         
-        self.rangedBeaconsSet = Set<String>() //initialize
+        self.currentlyRangedBeaconsSet = Set<String>() //initialize
     }
     
     //********************************************** APP DELEGATES *************************************************//
@@ -374,34 +387,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate,SFAuthenticationManagerDel
             dispatch_get_main_queue(), closure)
     }
     
-    /************************** TEST ************************/
-    
-    func test() {
-        
-        var timer:NSTimer = NSTimer.scheduledTimerWithTimeInterval(5, target: self, selector: Selector("testAdvertize"), userInfo: nil, repeats: true);
-        
-    }
-    
-    func testAdvertize() {
-        
-        var rangedBeacons:[String] = [String]()
-        
-        for var i = 0; i < 1; i++ {
-            rangedBeacons.append(self.getBeaconId(randomInt(0,max: MAX_BEACON_MAJOR_MINOR_NUM),minor:randomInt(0,max: MAX_BEACON_MAJOR_MINOR_NUM)))
-        }
-        
-        dispatch_async(rangedBeaconsAccessQueue) {
-            self.testGatherRangedBeacons(rangedBeacons)
-        }
-    }
-    
-    func testGatherRangedBeacons(rangedBeacons:[String]){
-        
-        for rangedBeacon in rangedBeacons {
-            self.rangedBeaconsSet.insert(rangedBeacon)
-        }
-    }
-    
     func hasConnectivity() -> Bool {
         let reachability: Reachability = Reachability.reachabilityForInternetConnection()
         let networkStatus: Int = reachability.currentReachabilityStatus().value
@@ -410,7 +395,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate,SFAuthenticationManagerDel
     
     func applicationDidReceiveMemoryWarning(application: UIApplication) {
         //NSURLCache.sharedURLCache().removeAllCachedResponses()
-        self.images =  Dictionary<String, NSData>()
     }
 }
 

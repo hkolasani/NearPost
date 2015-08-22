@@ -44,8 +44,6 @@ class SFDCDataManager {
         
         let accessToken = userInfoDict.objectForKey("accesstoken") as! String
         
-        println(accessToken)
-        
         return SFDCDataManager.sendSyncRequest(thumbURL, accessToken:accessToken)
     }
     
@@ -71,26 +69,11 @@ class SFDCDataManager {
         return SFDCDataManager.sendSyncRequest(picURL, accessToken:accessToken)
     }
     
-    class func testFetchPosts(beacons:[String])-> [Post] {
-        
-        var newPosts:[Post] = [Post]()
-        
-        for beacon in beacons {
-            var post:Post = Post()
-            post.postBody = "New Post from \(beacon)"
-            newPosts.append(post)
-        }
-        
-        return newPosts
-    }
-
     class func getPostById(postId:String)-> Post? {
         
         var requestURL:String = "\(SFDC_SETTINGS.hostURL)/sobjects/CollaborationGroupFeed/\(postId)"
         
         let accessToken = getAccessToken()
-        
-        println(accessToken)
         
         if let responseData:NSData = SFDCDataManager.sendSyncRequest(requestURL, accessToken:accessToken) {
             if let dataString = NSString(data: responseData, encoding:NSUTF8StringEncoding) {
@@ -100,28 +83,29 @@ class SFDCDataManager {
         
         return Post()
     }
-
+    
     class func fetchPosts(beacons:[String])-> [Post] {
         
-        var queryString:String = buildFeedQueryString(beacons)
+       var queryString:String = "Select Id,InsertedById,InsertedBy.Name,Body, Title,Type,CreatedDate From FeedItem  where Id IN "
+
+        queryString = "\(queryString) \(buildInClause(beacons))"
         
         queryString = queryString.stringByAddingPercentEncodingWithAllowedCharacters(.URLHostAllowedCharacterSet())!
         
-        var requestURL:String = "\(SFDC_SETTINGS.communitiesURL)/\(SFDC_SETTINGS.communityId)/chatter/feeds/record/\(SFDC_SETTINGS.nearPostGroupId)/feed-elements?q=\(queryString)"
+        var requestURL:String = "\(SFDC_SETTINGS.hostURL)/query?q=\(queryString)"
         
         let accessToken = getAccessToken()
         
-        println(accessToken)
-        
         if let responseData:NSData = SFDCDataManager.sendSyncRequest(requestURL, accessToken:accessToken) {
-            return parseFetchResults(responseData)
+            return parseQueryResults(responseData)
         }
         else {
             return [Post]()
         }
     }
+
     
-    class func parseFetchResults(responseData:NSData?) -> [Post] {
+    class func parseQueryResults(responseData:NSData?) -> [Post] {
         
         var posts:[Post] = [Post]()
         
@@ -140,13 +124,13 @@ class SFDCDataManager {
                     let parsedObject: AnyObject? = NSJSONSerialization.JSONObjectWithData(responseData!,options: NSJSONReadingOptions.AllowFragments,error:&parseError)
                     
                     if let results = parsedObject as? NSDictionary {
-                    
-                        if let elements = results["elements"] as? NSArray {
-                         
-                            for element in elements {
+                        
+                        if let records = results["records"] as? NSArray {
                             
-                                var post:Post = buildPost(element as! NSDictionary)
-                            
+                            for record in records {
+                                
+                                var post:Post = buildPost(record as! NSDictionary)
+                                
                                 posts.append(post)
                             }
                         }
@@ -161,7 +145,9 @@ class SFDCDataManager {
         return posts
     }
     
-    class func postPost(postBody:String)->Bool {
+    class func postPost(postBody:String)->String? {
+        
+        var postId:String?
         
         let accessToken = getAccessToken()
 
@@ -182,29 +168,25 @@ class SFDCDataManager {
         if let responseData:NSData = NSURLConnection.sendSynchronousRequest(request, returningResponse: &response, error:&error) {
         
             if error != nil {
-                return false
+                println(error?.description)
             }
             else {
                 if let responseDataString = NSString(data: responseData, encoding:NSUTF8StringEncoding) {
                     if (responseDataString.lowercaseString.rangeOfString("errorcode") != nil) {
-                        //println(responseDataString)
-                        return false
+                        println(responseDataString)
                     }
                     else {
                         if let post = getCreatedPost(responseData) {
                             if let post = getPostById(post.postId!) {
-                                println("Got it")
+                                postId = post.postId
                             }
                         }
                     }
                 }
-                else {
-                    return false
-                }
             }
         }
         
-        return true
+        return postId
     }
     
     class func getCreatedPost(newPostResponseData:NSData)->Post? {
@@ -261,72 +243,72 @@ class SFDCDataManager {
         let sfCoordinator:SFOAuthCoordinator = SFRestAPI.sharedInstance().coordinator
         
         let credentials:SFOAuthCredentials  = sfCoordinator.credentials
+        
+        println(credentials.accessToken)
 
         return credentials.accessToken
     }
     
-    class func buildBeaconsPred(beacons:[String])->String {
+    class func buildInClause(beacons:[String])->String {
         
-        var pred:String = "{"
+        var pred:String = " ("
         
         var cnt:Int = 0
         
         for beacon in beacons {
             if(cnt > 0) {
-                 pred = "\(pred) OR "
+                pred = "\(pred) , "
             }
             pred = "\(pred)\(beacon)"
             
             cnt++
         }
         
-        pred = "\(pred)} "
+        pred = "\(pred) ) "
         
         return pred
     }
-    
-    class func buildFeedQueryString(beacons:[String])->String {
+
+    class func buildPost(row:NSDictionary) -> Post {
         
-        var pred:String = ""
-        
-        var cnt:Int = 0
-        
-        for beacon in beacons {
-            if(cnt > 0) {
-                pred = "\(pred) OR "
-            }
-            pred = "\(beacon)*"
-            
-            cnt++
-        }
-        
-        return pred
-    }
-    
-    class func buildPost(element:NSDictionary) -> Post {
-    
         var post:Post = Post()
         post.postBody = ""
         post.postText = ""
-       
-        post.postId = element["id"] as? String
-        post.created = element["relativeCreatedDate"] as? String
         
-        if let actor = element["actor"] as? NSDictionary {
-            post.createdBy = actor["displayName"] as? String
-            post.createdById = actor["id"] as? String
-            if let photoDict = actor["photo"] as? NSDictionary {
-                post.thumbURL = photoDict["smallPhotoUrl"] as? String
+        post.postId = row["Id"] as? String
+        
+        if let dateStr = row["CreatedDate"] as? String {
+            if(count(dateStr) > 19) {
+                let dateFormatter = NSDateFormatter()
+                dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+                dateFormatter.timeZone = NSTimeZone(name:"GMT")
+                let index: String.Index = advance(dateStr.startIndex, 19)
+                let dateSubStr = dateStr.substringToIndex(index)
+                post.dateCreated = dateFormatter.dateFromString(dateSubStr)
             }
         }
         
-        if let bodyDict = element["body"] as? NSDictionary {
-            if let postBody:String = bodyDict["text"]  as? String {
-                post.postBody = postBody
-                if let rangeOfPost = postBody.rangeOfString("POSTTEXT:") {
-                    post.beaconId = postBody.substringToIndex(rangeOfPost.startIndex)
-                    post.postText = postBody.substringFromIndex(rangeOfPost.endIndex)
+        if let createdByDict = row["CreatedBy"] as? NSDictionary {
+            post.createdBy = createdByDict["Name"] as? String
+        }
+        
+        if let createdById = row["CreatedById"] as? String {
+            post.createdById = createdById
+        }
+        
+        if let postBody:String = row["Body"]  as? String {
+            post.postBody = postBody
+            if let rangeOfPost = postBody.rangeOfString("POSTTEXT:") {
+                post.beaconId = postBody.substringToIndex(rangeOfPost.startIndex)
+                var pBody:String? = postBody.substringFromIndex(rangeOfPost.endIndex)
+                if pBody != nil {
+                    if let rangeOfT = pBody!.rangeOfString("USERTHUMB:",options: .BackwardsSearch) {
+                        post.postText = pBody!.substringToIndex(rangeOfT.startIndex)
+                    }
                 }
+            }
+            if let rangeOfThumb:Range = postBody.rangeOfString("USERTHUMB:",options: .BackwardsSearch) {
+                post.thumbURL = postBody.substringFromIndex(rangeOfThumb.endIndex)
             }
         }
         

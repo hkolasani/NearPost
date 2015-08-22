@@ -127,7 +127,7 @@ class NewPostViewController: UIViewController,UITextViewDelegate {
         
         println(s)
         
-        appDelegate.post(s) as (sucess:Bool,beaconId:String)?
+        let result = appDelegate.post(s) as (beaconId:String,postId:String?)?
         
 //        for index in 1...10 {
 //            
@@ -145,20 +145,23 @@ class NewPostViewController: UIViewController,UITextViewDelegate {
         
         if let postText = self.postTextView?.text {
             
-            let result =  appDelegate.post(postText) as (sucess:Bool,beaconId:String)?
+            if let result =  appDelegate.post(postText)  as (beaconId:String,postId:String?)? {
             
-            if result!.sucess {
-                //self.showAlert("Advertized Successfully", message: "\(result?.beaconId)")
-                self.navigationController?.popViewControllerAnimated(true)
+                if let postId = result.postId {
+                    
+                    //self.showAlert("Advertized Successfully", message: "\(result?.beaconId)")
+                    self.navigationController?.popViewControllerAnimated(true)
+                }
+                else {
+                    self.showAlert("Post Failed", message: "Please try again!")
+                }
             }
             else {
-                self.showAlert("Post Failed", message: "Please make sure there are no special characters in the post text!")
+                self.showAlert("Post Failed", message: "Please try again!")
             }
             
         }
     }
-    
-    
     
     func showAlert(title:String,message:String) {
         
