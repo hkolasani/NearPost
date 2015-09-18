@@ -10,12 +10,12 @@ import Foundation
 
 class SFDCSettings:NSObject {
     
-    var clientId:String = "3MVG9yZ.WNe6byQDOL4KPtPTJwdTmJbYNVElnSvWenE9FLSE_E7PHcg2oe.LsdyBlX94H5.uxW28uRPiH1X8K"  //NearPost remote App on SFDC
-    var callbackURL:String = "nearpost://"
+    var clientId:String = "XXXXXXXXXXXXXXXXXX"  //NearPost remote App on SFDC
+    var callbackURL:String = "XXXXXXX://"
     var loginHost:String = "success.salesforce.com"
     var scopes:Set<String> = ["web","visualforce","api"]
-    var nearPostGroupId:String = "0F930000000blOE"   //Near Post Group Id
-    var communityId:String = "0DB30000000072LGAQ"   //Id of the Salesfoce Success Community
+    var nearPostGroupId:String = "XXXXXXXXX"   //Near Post Group Id
+    var communityId:String = "XXXXXXXXXXX"   //Id of the Salesfoce Success Community
     var communitiesURL:String = "https://success.salesforce.com/services/data/v34.0/connect/communities"
     var hostURL:String = "https://success.salesforce.com/services/data/v34.0"
     
