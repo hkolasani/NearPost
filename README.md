@@ -1,2 +1,2 @@
 # NearPost
-iBeacon based App that enables social network in a close proximity. Built using iOS8 and CoreLocation in Swift. 
+iBeacon based App that enables social networking among Salesforce users in a close proximity, by turning their iPhones as iBeacons. Built for iOS8 using Swift, CoreLocation, CloudKit and Salesforce Mobile SDK.
